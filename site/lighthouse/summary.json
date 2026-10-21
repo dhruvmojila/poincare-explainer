@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-21",
+  "lighthouse": "13.5.0",
+  "server": "scripts/lighthouse.mjs (static, gzip, no cache headers)",
+  "chrome_flags": "--headless=new --no-sandbox --disable-gpu",
+  "runs": {
+    "mobile": {
+      "scores": {
+        "performance": 97,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": "1.7\u00a0s",
+        "largest-contentful-paint": "2.4\u00a0s",
+        "total-blocking-time": "10\u00a0ms",
+        "cumulative-layout-shift": "0.001",
+        "speed-index": "1.7\u00a0s"
+      },
+      "preset": "default (mobile, simulated Slow 4G, 4x CPU)"
+    },
+    "desktop": {
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": "0.4\u00a0s",
+        "largest-contentful-paint": "0.5\u00a0s",
+        "total-blocking-time": "0\u00a0ms",
+        "cumulative-layout-shift": "0",
+        "speed-index": "0.4\u00a0s"
+      },
+      "preset": "desktop"
+    }
+  }
+}

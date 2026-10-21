@@ -1,0 +1,32 @@
+{
+  "name": "poincare-explainer",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Interactive explainer and TypeScript reference library for 'LLM Orchestration with Geometry-Aware Memory' (Mojila, ICBDML 2026, DOI 10.1109/ICBDML68582.2026.11544690).",
+  "license": "Apache-2.0",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "site"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w site",
+    "build": "npm run build -w poincare-ball && npm run build -w site",
+    "preview": "npm run preview -w site",
+    "test": "npm test -w poincare-ball",
+    "typecheck": "npm run typecheck -w poincare-ball && npm run typecheck -w site",
+    "e2e": "node scripts/e2e.mjs",
+    "verify": "node scripts/verify.mjs",
+    "lighthouse": "node scripts/lighthouse.mjs"
+  },
+  "engines": {
+    "node": ">=20.19"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "playwright": "^1.58.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.7",
+    "vitest": "^3.2.7"
+  }
+}

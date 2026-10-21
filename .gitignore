@@ -1,0 +1,14 @@
+node_modules/
+dist/
+coverage/
+*.log
+.DS_Store
+.env.local
+.vite/
+site/screenshots/*.tmp.png
+
+# full Lighthouse reports are large; summary.json is committed
+site/lighthouse/*.report.json
+
+# e2e screenshots are build artefacts
+site/screenshots/

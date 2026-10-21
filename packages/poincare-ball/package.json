@@ -1,0 +1,45 @@
+{
+  "name": "poincare-ball",
+  "version": "0.1.0",
+  "description": "Poincaré ball model of hyperbolic space (Möbius gyrovector operations, exp/log maps, geodesics, Lorentz conversion, Sarkar tree layout, exponential decay weights). Reference implementation accompanying Mojila, 'LLM Orchestration with Geometry-Aware Memory', ICBDML 2026.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "hyperbolic",
+    "poincare",
+    "poincare-ball",
+    "gyrovector",
+    "mobius",
+    "sarkar",
+    "hierarchy",
+    "embedding"
+  ],
+  "author": "Dhruv Mojila",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dhruvmojila/poincare-memory"
+  },
+  "dependencies": {
+    "blakejs": "^1.2.1"
+  }
+}

@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>LLM Orchestration with Geometry-Aware Memory — interactive explainer</title>
+    <meta name="description" content="An interactive, open-source explainer of Mojila (ICBDML 2026): why hierarchical memory for LLM orchestration lives in the Poincaré ball, how distance encodes depth, flat versus hyperbolic on the same tree, time-weighted retrieval you can query, and how the paper's controller, ensemble and synthesiser use that memory." />
+    <meta name="theme-color" content="#07090f" />
+    <link rel="icon" href="%BASE_URL%favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href="%VITE_SITE_URL%/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="LLM Orchestration with Geometry-Aware Memory — interactive explainer" />
+    <meta property="og:description" content="Nine interactive chapters: why a hierarchy fits in the Poincaré ball, flat versus hyperbolic on the same tree, what the distance formula means, a memory you can query, and how the paper's controller, ensemble and synthesiser use geometry-aware memory. With a TypeScript and a Python reference implementation." />
+    <meta property="og:url" content="%VITE_SITE_URL%/" />
+    <meta property="og:image" content="%VITE_SITE_URL%/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="poincare-explainer" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="LLM Orchestration with Geometry-Aware Memory — interactive explainer" />
+    <meta name="twitter:description" content="Nine interactive chapters and an open-source reference implementation of Mojila, ICBDML 2026." />
+    <meta name="twitter:image" content="%VITE_SITE_URL%/og.png" />
+
+    <!-- Highwire Press tags (Google Scholar) for the paper this page explains -->
+    <meta name="citation_title" content="LLM Orchestration with Geometry-Aware Memory" />
+    <meta name="citation_author" content="Mojila, Dhruv" />
+    <meta name="citation_publication_date" content="2026/02/27" />
+    <meta name="citation_conference_title" content="2026 2nd International Conference on Big Data &amp; Machine Learning (ICBDML)" />
+    <meta name="citation_firstpage" content="1" />
+    <meta name="citation_lastpage" content="7" />
+    <meta name="citation_doi" content="10.1109/ICBDML68582.2026.11544690" />
+    <meta name="citation_publisher" content="IEEE" />
+    <meta name="citation_abstract_html_url" content="https://ieeexplore.ieee.org/document/11544690" />
+    <meta name="citation_language" content="en" />
+
+    <!-- schema.org: the paper (ScholarlyArticle) and this page (WebPage) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "ScholarlyArticle",
+          "@id": "https://doi.org/10.1109/ICBDML68582.2026.11544690",
+          "name": "LLM Orchestration with Geometry-Aware Memory",
+          "headline": "LLM Orchestration with Geometry-Aware Memory",
+          "author": {
+            "@type": "Person",
+            "@id": "https://orcid.org/0009-0007-9596-7503",
+            "name": "Dhruv Mojila",
+            "givenName": "Dhruv",
+            "familyName": "Mojila",
+            "sameAs": "https://orcid.org/0009-0007-9596-7503"
+          },
+          "datePublished": "2026-02-27",
+          "pagination": "1-7",
+          "inLanguage": "en",
+          "publisher": { "@type": "Organization", "name": "IEEE" },
+          "publication": {
+            "@type": "PublicationEvent",
+            "name": "2026 2nd International Conference on Big Data & Machine Learning (ICBDML)",
+            "startDate": "2026-02-27",
+            "endDate": "2026-02-28",
+            "location": { "@type": "Place", "name": "Bhopal, India" }
+          },
+          "identifier": { "@type": "PropertyValue", "propertyID": "DOI", "value": "10.1109/ICBDML68582.2026.11544690" },
+          "sameAs": "https://ieeexplore.ieee.org/document/11544690",
+          "url": "https://doi.org/10.1109/ICBDML68582.2026.11544690"
+        },
+        {
+          "@type": "WebPage",
+          "@id": "%VITE_SITE_URL%/",
+          "url": "%VITE_SITE_URL%/",
+          "name": "LLM Orchestration with Geometry-Aware Memory — interactive explainer",
+          "description": "Interactive, open-source explainer of the paper: Poincaré-ball memory, flat versus hyperbolic embeddings of one tree, time-weighted retrieval you can query, the metacognitive controller, the provider-agnostic ensemble and multi-objective synthesis.",
+          "inLanguage": "en",
+          "isAccessibleForFree": true,
+          "license": "https://www.apache.org/licenses/LICENSE-2.0",
+          "about": { "@id": "https://doi.org/10.1109/ICBDML68582.2026.11544690" },
+          "author": { "@id": "https://orcid.org/0009-0007-9596-7503" },
+          "image": "%VITE_SITE_URL%/og.png"
+        }
+      ]
+    }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#ch-1">Skip to the first chapter</a>
+    <div id="svh-probe" aria-hidden="true"></div>
+    <canvas id="stage" aria-hidden="true"></canvas>
+    <div class="hero-halo" aria-hidden="true"></div>
+    <div class="hero-vignette" aria-hidden="true"></div>
+    <div class="scrim" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="topbar" id="topbar">
+      <p class="tb-chapter"><span class="tb-num">00 / 09</span><span class="tb-title">Interactive explainer</span></p>
+      <div class="progress" aria-hidden="true"></div>
+      <button id="motion-toggle" class="motion-toggle" type="button" aria-pressed="false">Pause animations</button>
+    </div>
+    <nav class="rail is-hidden" aria-label="Chapters">
+      <ol>
+        <li><a href="#ch-1" data-rail="1" title="Flat memory forgets structure"><span class="n">01</span></a></li>
+        <li><a href="#ch-2" data-rail="2" title="Flat or hyperbolic?"><span class="n">02</span></a></li>
+        <li><a href="#ch-3" data-rail="3" title="Geometry 101"><span class="n">03</span></a></li>
+        <li><a href="#ch-4" data-rail="4" title="Embedding a hierarchy"><span class="n">04</span></a></li>
+        <li><a href="#ch-5" data-rail="5" title="Time-weighted memory"><span class="n">05</span></a></li>
+        <li><a href="#ch-6" data-rail="6" title="Metacognitive controller"><span class="n">06</span></a></li>
+        <li><a href="#ch-7" data-rail="7" title="Ensemble and throttling"><span class="n">07</span></a></li>
+        <li><a href="#ch-8" data-rail="8" title="Synthesis"><span class="n">08</span></a></li>
+        <li><a href="#ch-9" data-rail="9" title="Cite and build"><span class="n">09</span></a></li>
+      </ol>
+      <p class="rail-title" aria-hidden="true"></p>
+    </nav>
+
+    <header class="hero" id="top">
+      <div class="hero-inner" id="hero-text">
+        <p class="eyebrow">Interactive explainer · ICBDML 2026 · open source</p>
+        <h1>LLM Orchestration with <span class="thin">Geometry-Aware</span> Memory</h1>
+        <p class="lede">
+          A controller that decomposes a query, an ensemble of language models that answers it, a
+          synthesiser that fuses the answers, and in the middle a memory that keeps what the system
+          knows in <em>hyperbolic</em> space, where hierarchies fit. Nine chapters, one disk, code you
+          can run.
+        </p>
+        <p class="byline">
+          Based on D. Mojila, <cite>LLM Orchestration with Geometry-Aware Memory</cite>, 2026 2nd
+          International Conference on Big Data &amp; Machine Learning (ICBDML), Bhopal, India, 27–28 Feb.
+          2026, pp. 1–7. DOI
+          <a href="https://doi.org/10.1109/ICBDML68582.2026.11544690">10.1109/ICBDML68582.2026.11544690</a>
+        </p>
+        <nav class="hero-links" aria-label="Paper and code">
+          <a class="pill" href="https://ieeexplore.ieee.org/document/11544690">Paper on IEEE Xplore</a>
+          <a class="pill" href="https://github.com/dhruvmojila/poincare-memory">poincare-memory</a>
+          <a class="pill" href="https://github.com/dhruvmojila/poincare-orchestra">poincare-orchestra</a>
+          <a class="pill" href="#ch-9">Cite</a>
+        </nav>
+        <p class="scroll-cue" aria-hidden="true">Scroll</p>
+        <p class="hero-fig" aria-hidden="true">fig. 0 · the {7,3} tiling of the hyperbolic plane, drawn by reflection</p>
+      </div>
+      <p class="vh">Behind the title, a slowly breathing tiling of the hyperbolic plane by regular heptagons, three at every vertex.</p>
+    </header>
+
+    <main>
+      <!-- ============ 01 ============ -->
+      <section class="chapter" id="ch-1" data-scene="flat" data-title="Flat memory forgets structure" aria-labelledby="h-ch1">
+        <p class="vh">Visual: a tree of about two hundred nodes drawn flat in the plane, then morphed into the Poincaré disk, where every edge has the same hyperbolic length and rings mark distance from the centre.</p>
+        <div class="steps">
+          <div class="step" data-step="0">
+            <div class="card">
+              <div class="chap"><span class="n">01</span><span class="rule"></span><span class="of">of 09</span></div>
+              <h2 id="h-ch1">Flat memory forgets structure</h2>
+              <p>
+                Knowledge about a domain is a hierarchy: a few broad ideas, many specific ones. Here is an
+                illustrative taxonomy of <span data-count="nodes">~200</span> concepts (six domains, then
+                areas, topics and leaves), the shape of the domain knowledge the paper's memory holds, drawn
+                the usual way in the flat Euclidean plane.
+              </p>
+              <p>
+                Every ring of the drawing shares one circumference. Each level has about three times as
+                many nodes as the one above, but the room for them grows only linearly, so the
+                <span data-count="leaves">~120</span> leaves end up a few pixels apart.
+              </p>
+              <p class="caption">Radial tidy tree, Euclidean plane. Node colour encodes depth, teal (root) to brass (leaves). Hover a node for its label.</p>
+              <p class="fig">fig. 01 · <span data-fig="flat-space">Euclidean plane, radial tidy tree</span></p>
+            </div>
+          </div>
+          <div class="step" data-step="1">
+            <div class="card">
+              <h3>The same tree in the Poincaré disk</h3>
+              <p>
+                Every edge now has the <em>same</em> hyperbolic length τ (here τ = <span data-tau>1.1</span>).
+                The picture looks squeezed towards the rim only because we are looking at hyperbolic space
+                through a Euclidean window; the node markers shrink with the metric. In the geometry
+                itself, nothing is crowded.
+              </p>
+              <p class="caption">Sarkar layout in the unit disk, computed in the browser by <code>sarkarLayout</code>.</p>
+              <p class="fig">fig. 01 · <span data-fig="flat-space">Euclidean plane, radial tidy tree</span></p>
+            </div>
+          </div>
+          <div class="step" data-step="2">
+            <div class="card">
+              <h3>Exponential room</h3>
+              <p>
+                A hyperbolic circle of radius r has circumference 2π sinh r, not 2π r. The rings are drawn at
+                r = 1 … 4. A tree whose levels grow like b<sup>depth</sup> needs exactly this kind of room,
+                which is why it embeds with almost no distortion (Sarkar, 2011), and why the paper stores
+                hierarchical domain knowledge in the Poincaré ball
+                <span class="tex" data-tex="\mathbb{B}^n=\{x : \lVert x\rVert&lt;1\}" data-display="inline"></span>.
+              </p>
+              <table class="mini">
+                <thead><tr><th>r</th><th>2π r</th><th>2π sinh r</th></tr></thead>
+                <tbody>
+                  <tr><td>1</td><td data-circ-e="1"></td><td data-circ-h="1"></td></tr>
+                  <tr><td>2</td><td data-circ-e="2"></td><td data-circ-h="2"></td></tr>
+                  <tr><td>3</td><td data-circ-e="3"></td><td data-circ-h="3"></td></tr>
+                  <tr><td>4</td><td data-circ-e="4"></td><td data-circ-h="4"></td></tr>
+                </tbody>
+              </table>
+              <p class="caption">Dashed rings: hyperbolic circles of radius 1 to 4 about the origin.</p>
+              <p class="fig">fig. 01 · rings at hyperbolic radius 1 to 4 · <span data-fig="flat-space">Poincaré disk, Sarkar layout</span></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 02 ============ -->
+      <section class="chapter" id="ch-2" data-scene="compare" data-title="Flat or hyperbolic?" aria-labelledby="h-ch2">
+        <p class="vh">Visual: the same tree drawn twice with the same edge length, as a radial tidy tree in the Euclidean plane and as Sarkar's layout in the Poincaré disk; a typed concept becomes the focus and each drawing marks its six nearest neighbours, teal when they are true relatives within two tree edges and amber when they belong to another branch.</p>
+        <div class="steps">
+          <div class="step" data-step="0">
+            <div class="card">
+              <div class="chap"><span class="n">02</span><span class="rule"></span><span class="of">of 09</span></div>
+              <h2 id="h-ch2">Flat or hyperbolic? Same tree, your query</h2>
+              <p>
+                The same <span data-count="nodes">~200</span>-node tree embedded two ways with the same edge
+                length τ = <span data-tau>1.1</span>: a radial tidy layout in the Euclidean plane, levels τ
+                apart, and Sarkar's layout in the Poincaré disk. Type a concept. The best-matching node by
+                label becomes the focus, and each space marks its six nearest neighbours by its own
+                distance: <strong class="teal">teal</strong> if the neighbour is a true relative (within two
+                tree edges), <strong class="amber">amber</strong> if it belongs to another branch.
+              </p>
+              <label class="query" for="cmp-query">
+                <span class="vh">Find a concept in the tree</span>
+                <input id="cmp-query" type="search" placeholder="Find a concept… (knee, gait, VO2 max)" autocomplete="off" spellcheck="false" />
+              </label>
+              <div class="chips" id="cmp-chips" aria-label="Examples">
+                <button type="button" class="chip" data-q="stride length measurement">a leaf: stride length measurement</button>
+                <button type="button" class="chip" data-q="knee">a mid node: knee</button>
+                <button type="button" class="chip" data-q="athletic performance">the root: athletic performance</button>
+              </div>
+              <p class="stat" id="cmp-focus">no focus yet · type a concept or pick a chip</p>
+              <div class="cmp">
+                <div>
+                  <p class="kicker">Euclidean plane</p>
+                  <p class="metric">precision <b id="cmp-e-prec">—</b></p>
+                  <p class="metric">distortion <b id="cmp-e-dist">—</b></p>
+                  <ol class="nn" id="cmp-e-nn"></ol>
+                </div>
+                <div>
+                  <p class="kicker">Poincaré disk</p>
+                  <p class="metric">precision <b id="cmp-h-prec">—</b></p>
+                  <p class="metric">distortion <b id="cmp-h-dist">—</b></p>
+                  <ol class="nn" id="cmp-h-nn"></ol>
+                </div>
+              </div>
+              <p class="caption">
+                Neighbour precision: the fraction of the six that are true relatives. Distortion: mean
+                |d<sub>embedded</sub> / (τ · d<sub>tree</sub>) − 1| over 400 random pairs, computed once per layout.
+                Nothing is scripted; if a node contradicts the expected pattern, the numbers say so.
+              </p>
+              <p class="fig">fig. 02 · left: radial tidy tree, levels τ apart · right: Sarkar layout, τ = <span data-tau>1.1</span> · badges 1–6: nearest neighbours</p>
+            </div>
+          </div>
+          <div class="step" data-step="1">
+            <div class="card">
+              <h3>What the open-source benchmark measures</h3>
+              <p>
+                Mean average precision for reconstructing the WordNet <code>mammal.n.01</code> subtree
+                (1,170 nodes) from embeddings of dimension 2, 5 and 10, Poincaré against Euclidean, from
+                the open-source benchmark in <code>poincare-memory</code>, not from the system in the paper.
+              </p>
+              <div class="legend"><span><i class="sw p"></i>Poincaré</span><span><i class="sw e"></i>Euclidean</span></div>
+              <svg class="bars" viewBox="0 0 480 190" role="img" aria-labelledby="bars-title" aria-describedby="bars-desc">
+                <title id="bars-title">MAP by embedding dimension, Poincaré versus Euclidean</title>
+                <desc id="bars-desc">At dimension 2, Poincaré 0.779 and Euclidean 0.533; at dimension 5, 0.975 and 0.802; at dimension 10, 0.957 and 0.837.</desc>
+                <line class="ax" x1="40" y1="160" x2="460" y2="160" />
+                <line class="ax" x1="40" y1="30" x2="40" y2="160" />
+                <text x="34" y="34" text-anchor="end">1.0</text>
+                <text x="34" y="99" text-anchor="end">0.5</text>
+                <text x="34" y="164" text-anchor="end">0</text>
+                <g data-bars="2">
+                  <rect class="p" x="80" y="58.7" width="44" height="101.3" /><text class="v" x="102" y="52" text-anchor="middle">0.779</text>
+                  <rect class="e" x="130" y="90.7" width="44" height="69.3" /><text class="v" x="152" y="84" text-anchor="middle">0.533</text>
+                  <text class="lab" x="127" y="180" text-anchor="middle">d = 2</text>
+                </g>
+                <g data-bars="5">
+                  <rect class="p" x="230" y="33.2" width="44" height="126.8" /><text class="v" x="252" y="27" text-anchor="middle">0.975</text>
+                  <rect class="e" x="280" y="55.7" width="44" height="104.3" /><text class="v" x="302" y="49" text-anchor="middle">0.802</text>
+                  <text class="lab" x="277" y="180" text-anchor="middle">d = 5</text>
+                </g>
+                <g data-bars="10">
+                  <rect class="p" x="380" y="35.6" width="44" height="124.4" /><text class="v" x="402" y="29" text-anchor="middle">0.957</text>
+                  <rect class="e" x="430" y="51.2" width="44" height="108.8" /><text class="v" x="452" y="45" text-anchor="middle">0.837</text>
+                  <text class="lab" x="427" y="180" text-anchor="middle">d = 10</text>
+                </g>
+              </svg>
+              <p>
+                The honest reading: two hyperbolic dimensions (0.779) land close to five Euclidean ones
+                (0.802), and five hyperbolic dimensions (0.975) beat ten Euclidean ones (0.837) on this task.
+                The same fidelity needs fewer dimensions, which means a smaller index and less compute per
+                query. The benchmark measures MAP only; no timings are claimed.
+              </p>
+              <p class="caption">MAP, higher is better. From the open-source benchmark, WordNet mammals, 1,170 nodes.</p>
+              <p class="fig">fig. 02 · the two embeddings stay on the stage · the bars are the open-source benchmark, not this tree</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 03 ============ -->
+      <section class="chapter" id="ch-3" data-scene="geometry" data-title="Geometry 101" aria-labelledby="h-ch3">
+        <p class="vh">Visual: two draggable points in the disk joined by their geodesic, a circular arc meeting the boundary at right angles; a third point slides outward along a radius while its distance from the centre is read out.</p>
+        <div class="steps">
+          <div class="step" data-step="0">
+            <div class="card">
+              <div class="chap"><span class="n">03</span><span class="rule"></span><span class="of">of 09</span></div>
+              <h2 id="h-ch3">Geometry 101</h2>
+              <p>The ball carries the paper's metric, the Euclidean one rescaled by a factor that blows up near the boundary:</p>
+              <div class="eq-row">
+                <div class="eq" data-tex="g_x=\left(\frac{2}{1-\lVert x\rVert^{2}}\right)^{2} g^{E}"></div>
+                <span class="eq-no">(2)</span>
+              </div>
+              <div class="eq eq-live" id="eq-metric-live" data-tex="\text{at }x:\ \lambda_x^{2}=\left(\frac{2}{1-\htmlClass{lf-nx}{0.000}}\right)^{2}=\htmlClass{lf-lam}{0.00}"></div>
+              <p>
+                <strong>Drag x and y.</strong> The shortest path between them is an arc of a circle that meets
+                the boundary at right angles, a straight line only when it passes through the centre.
+              </p>
+              <p class="caption">x in brass, y in teal; the solid curve is their geodesic. d(x, y) = <span class="readout tick" id="live-dist">—</span></p>
+              <p class="fig">fig. 03 · x in brass, y in teal · the solid curve is their geodesic</p>
+            </div>
+          </div>
+          <div class="step" data-step="1">
+            <div class="card">
+              <h3>The distance formula</h3>
+              <div class="eq-row">
+                <div class="eq" id="eq-symbolic" data-tex="d(x,y)=\operatorname{arcosh}\!\left(1+\frac{2\,\lVert x-y\rVert^{2}}{\left(1-\lVert x\rVert^{2}\right)\left(1-\lVert y\rVert^{2}\right)}\right)"></div>
+                <span class="eq-no">(3)</span>
+              </div>
+              <div class="eq eq-live" id="eq-live" data-tex="d=\operatorname{arcosh}\!\left(1+\frac{2\cdot\htmlClass{lf-dxy}{0.000}}{\htmlClass{lf-ox}{0.000}\cdot\htmlClass{lf-oy}{0.000}}\right)=\htmlClass{lf-d}{0.000}"></div>
+              <p>
+                The straight-line length is only ‖x − y‖ = <span class="readout tick" id="live-chord">—</span>.
+                Near the rim the denominators shrink and the hyperbolic distance grows without bound: the
+                boundary is infinitely far away.
+              </p>
+              <p class="caption">Dashed: the Euclidean chord, for comparison. Numbers update as you drag.</p>
+              <p class="fig">fig. 03 · d(x, y) = <span data-fig="geo-d">—</span> · dashed chord for comparison</p>
+            </div>
+          </div>
+          <div class="step" data-step="2">
+            <div class="card">
+              <h3>Distance from the centre is depth</h3>
+              <p>
+                In the memory, the root of a hierarchy sits at the origin and each level is one edge length τ
+                further out. Slide p outward: its distance from the centre,
+                <span class="tex" data-tex="d(0,p)=2\,\operatorname{artanh}\lVert p\rVert" data-display="inline"></span>,
+                is what retrieval reads to tell general from specific.
+              </p>
+              <label class="slider" for="depth-slider">
+                <span><span>‖p‖</span><output id="depth-norm">0.500</output></span>
+                <input id="depth-slider" type="range" min="0" max="0.995" step="0.001" value="0.5" />
+              </label>
+              <p class="caption">d(0, p) = <span class="readout tick" id="depth-dist">—</span> · depth at τ = 1: <span class="readout tick" id="depth-level">—</span>. Rings at hyperbolic radius 1 to 5.</p>
+              <p class="fig">fig. 03 · p slides along a radius · rings at hyperbolic radius 1 to 5</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 04 ============ -->
+      <section class="chapter" id="ch-4" data-scene="hierarchy" data-title="Embedding a hierarchy" aria-labelledby="h-ch4">
+        <p class="vh">Visual: a forty-three node anatomy hierarchy is embedded level by level with Sarkar's construction; the picture is translated so one node sits at the centre while its children are placed, then translated back. Hovering a node highlights ancestors in brass and descendants in teal; dragging the disk pans the hyperbolic plane.</p>
+        <div class="steps">
+          <div class="step" data-step="0">
+            <div class="card">
+              <div class="chap"><span class="n">04</span><span class="rule"></span><span class="of">of 09</span></div>
+              <h2 id="h-ch4">Embedding a hierarchy</h2>
+              <p>
+                Sarkar's construction, level by level. The hierarchy is a textbook sketch of the body,
+                <span data-count="anatomy">~40</span> nodes: body → systems → regions → muscle groups →
+                muscles. (The paper's evaluation domain is the biomechanics of athletic performance; this
+                tree is a generic stand-in, not the paper's data.)
+              </p>
+              <p><strong>Step 1.</strong> Put the root at the origin.</p>
+              <p class="caption">The root, "body", at the centre of the disk.</p>
+              <p class="fig">fig. 04 · Sarkar construction · τ = 1.0 · <span data-count="anatomy">43</span> nodes</p>
+            </div>
+          </div>
+          <div class="step" data-step="1">
+            <div class="card">
+              <h3>Children at distance τ</h3>
+              <p>
+                <strong>Step 2.</strong> Place the root's children at hyperbolic distance τ, at evenly
+                spaced angles. Every edge in the finished embedding will have exactly this length.
+              </p>
+              <p class="caption">Dashed ring: the circle of hyperbolic radius τ = 1 about the origin.</p>
+              <p class="fig">fig. 04 · the root's children on the ring d = τ</p>
+            </div>
+          </div>
+          <div class="step" data-step="2">
+            <div class="card">
+              <h3>Recurse: translate, place, translate back</h3>
+              <p>
+                <strong>Step 3.</strong> For each placed node v, Möbius-translate the whole picture so that v
+                sits at the origin,
+                <span class="tex" data-tex="z\mapsto(-v)\oplus z" data-display="inline"></span>,
+                place v's children at distance τ in the directions that avoid the parent, then translate
+                back, <span class="tex" data-tex="z\mapsto v\oplus z" data-display="inline"></span>.
+                Both moves are isometries, so nothing already placed changes shape. The camera does the
+                same move for the musculoskeletal subtree, then the rest is built.
+              </p>
+              <p class="caption">Scroll drives the construction; the cross marks the origin while the camera is translated.</p>
+              <p class="fig">fig. 04 · the cross marks the origin while the camera is translated</p>
+            </div>
+          </div>
+          <div class="step" data-step="3">
+            <div class="card">
+              <h3>Ancestors, descendants, depth</h3>
+              <p>
+                <strong>Hover or tap a node.</strong> Its ancestors light up brass, its descendants teal, and
+                the readout shows its distance from the origin. A query that lands near <em>quadriceps</em>
+                can walk inward for context (lower limb, musculoskeletal) or outward for specifics
+                (rectus femoris, vastus lateralis). This is the hierarchy-aware retrieval the paper
+                describes: similarity that accounts for both semantic content and structural
+                relationships.
+              </p>
+              <p>
+                A free-text query has no depth of its own, and a point near the centre of the ball is close
+                to everything. The reference implementation therefore measures semantic similarity on a
+                reference shell (direction only) and applies depth and ancestry as explicit structure;
+                that is how it realises the paper's retrieval. Chapter 05 lets you type such a query.
+              </p>
+              <p class="caption readout" id="hover-readout">—</p>
+              <p class="fig">fig. 04 · hover or tap a node · ancestors brass, descendants teal</p>
+            </div>
+          </div>
+          <div class="step" data-step="4">
+            <div class="card">
+              <h3>Drag the disk</h3>
+              <p>
+                <strong>Drag the empty disk.</strong> That is a hyperbolic translation of the camera: edges stay
+                geodesics and every parent–child distance stays τ; only the Euclidean window moves. Bring
+                any leaf to the centre to read it. Zooming in hyperbolic space is exactly this, a move
+                of the focus toward the origin, never a change of scale.
+              </p>
+              <button id="reset-view" class="btn" type="button">Reset view</button>
+              <p class="caption">The whole embedding under a Möbius translation; nothing is rescaled.</p>
+              <p class="fig">fig. 04 · <span data-fig="hier-view">drag the empty disk to translate the camera</span></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 05 ============ -->
+      <section class="chapter" id="ch-5" data-scene="time" data-title="Time-weighted memory" aria-labelledby="h-ch5">
+        <p class="vh">Visual: timestamped memories sit beside the nodes they are about; as a time control moves forward they fade according to the chosen decay curve; a typed query is embedded and the five best-scoring memories are badged on the disk, with a marker on the reference shell at the angle of the best one.</p>
+        <div class="steps">
+          <div class="step" data-step="0">
+            <div class="card">
+              <div class="chap"><span class="n">05</span><span class="rule"></span><span class="of">of 09</span></div>
+              <h2 id="h-ch5">Time-weighted memory</h2>
+              <p>
+                Memories carry a timestamp. The paper's memory uses time-weighted embeddings: geometric
+                proximity is multiplied by a recency weight, so at equal hyperbolic distance newer evidence
+                wins. Each memory here is attached to the node it is about; its label shows its age in days.
+              </p>
+              <p class="caption">Twelve dated memories around the anatomy tree (teal notes and logs, brass facts); opacity is the recency weight.</p>
+              <p class="fig">fig. 05 · twelve dated memories beside their nodes · opacity = weight</p>
+            </div>
+          </div>
+          <div class="step" data-step="1">
+            <div class="card">
+              <h3>Three ways to forget</h3>
+              <p>
+                The reference implementation ships three curves: an exponential half-life
+                <span class="tex" data-tex="w=2^{-\Delta t/h}" data-display="inline"></span>, the Ebbinghaus
+                curve <span class="tex" data-tex="w=e^{-\Delta t/S}" data-display="inline"></span>, and a
+                validity window that holds full weight then ramps to zero. Move time forward and watch the
+                memories slide down the curve.
+              </p>
+              <fieldset class="choices">
+                <legend>Decay curve</legend>
+                <label><input type="radio" name="decay-kind" value="half-life" checked /> half-life, h = 14 d</label>
+                <label><input type="radio" name="decay-kind" value="ebbinghaus" /> Ebbinghaus, S = 14 d</label>
+                <label><input type="radio" name="decay-kind" value="window" /> window 21 d + 7 d ramp</label>
+              </fieldset>
+              <label class="slider" for="time-slider">
+                <span><span>time elapsed since the newest memory</span><output id="time-now">0 d</output></span>
+                <input id="time-slider" type="range" min="0" max="60" step="0.5" value="0" />
+              </label>
+              <svg class="chart" id="decay-chart" viewBox="0 0 460 170" role="img" aria-label="Recency weight against age for the three decay curves, with the memories plotted at their current ages"></svg>
+              <p class="caption">Weight w(Δt) against age in days; dots are the memories at their current age (facts have a 12× longer stability than notes, logs 3×).</p>
+              <p class="fig">fig. 05 · <span data-fig="time-kind">half-life</span> · t = <span data-fig="time-t">0</span> d · weight = opacity</p>
+            </div>
+          </div>
+          <div class="step" data-step="2">
+            <div class="card">
+              <h3>Ask the memory</h3>
+              <p>
+                Type a query. It is embedded by the same offline hashing embedder the reference
+                implementation uses (word and character n-gram features, keyed BLAKE2b, 256 dimensions),
+                as is every memory here: the <span data-count="anatomy">43</span> anatomy nodes and the twelve
+                dated notes. Similarity is measured on the reference shell at the root depth, direction only;
+                score = e<sup>−d</sup> · w(Δt) with the curve and time position set above, so a fresh clinical
+                note outranks an older one at the same distance and, as it ages, durable facts climb back.
+              </p>
+              <label class="query" for="mem-query">
+                <span class="vh">Ask the memory</span>
+                <input id="mem-query" type="search" placeholder="Ask the memory…" value="hamstring tightness after sprint sessions" autocomplete="off" spellcheck="false" />
+              </label>
+              <div class="chips" id="mem-chips" aria-label="Examples">
+                <button type="button" class="chip" data-q="hamstring tightness after sprint sessions">hamstring tightness after sprint sessions</button>
+                <button type="button" class="chip" data-q="calf cramp at the end of a race">calf cramp at the end of a race</button>
+                <button type="button" class="chip" data-q="resting heart rate">resting heart rate</button>
+              </div>
+              <p class="stat" id="mem-status">query embedded (256-d, hashing)</p>
+              <ol class="rank" id="memory-rank"></ol>
+              <p class="caption">
+                Top five by time-weighted score: score, shell distance d, age and weight. The badges on the disk
+                are the ranks; the brass diamond sits on the shell at the angle of the top match, a visual proxy,
+                since the disk draws the tree, not the 256-dimensional embedding.
+              </p>
+              <p class="fig">fig. 05 · badges 1–5 = the ranking · diamond = query on the shell at the angle of <span data-fig="time-top">—</span></p>
+            </div>
+          </div>
+          <div class="step" data-step="3">
+            <div class="card">
+              <h3>Add a note</h3>
+              <p>
+                Write a note and give it an age. It is embedded, attached under the node whose name it
+                matches best, placed one depth step beyond that node (a Sarkar step: translate the node to
+                the origin, place at τ, translate back) and it joins the ranking at once, decaying under the
+                current curve.
+              </p>
+              <div class="note-form">
+                <label class="vh" for="note-text">Note text</label>
+                <input id="note-text" type="text" placeholder="e.g. calf cramped again after hill sprints" autocomplete="off" />
+                <label class="age" for="note-age"><span>age</span><input id="note-age" type="number" min="0" max="999" step="1" value="2" /><span>d</span></label>
+                <button id="note-add" class="btn" type="button">Add note</button>
+              </div>
+              <p class="stat" id="note-status">nothing added yet · the note stays in this page</p>
+              <p class="caption">Added notes are drawn with a pale outline, one depth step beyond their node, and appear in the chart and the ranking above.</p>
+              <p class="fig">fig. 05 · added notes: pale outline · one depth step beyond their node</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 06 ============ -->
+      <section class="chapter" id="ch-6" data-scene="controller" data-title="Metacognitive controller" aria-labelledby="h-ch6">
+        <p class="vh">Visual: a query box splits into four sub-tasks that flow as particles to four specialist roles; a small copy of the memory disk marks the depth of each sub-task; allocation bars grow in proportion to expected information gain per unit cost, and one sub-task is marked skipped for budget.</p>
+        <div class="steps">
+          <div class="step" data-step="0">
+            <div class="card">
+              <div class="chap"><span class="n">06</span><span class="rule"></span><span class="of">of 09</span></div>
+              <h2 id="h-ch6">Metacognitive controller</h2>
+              <p>
+                Before any model is called, the controller analyses the query and decomposes it into
+                coordinated sub-tasks:
+              </p>
+              <div class="eq-row">
+                <div class="eq" data-tex="Q\to\{q_1,\dots,q_n\}"></div>
+                <span class="eq-no">(5)</span>
+              </div>
+              <p>
+                The query here, shaped after a sample run of <code>poincare-orchestra</code>: an athlete's
+                calf tightens in the last hundred metres of 400 m repeats; plan the next fortnight. Four
+                sub-tasks, one per focus the analysis found.
+              </p>
+              <p class="caption">Left: the query. Centre: sub-tasks q₁ to q₄ fanning out along particle ribbons.</p>
+              <p class="fig">fig. 06 · eq. (5) decomposition · Q at the left, q₁–q₄ along the ribbons</p>
+            </div>
+          </div>
+          <div class="step" data-step="1">
+            <div class="card">
+              <h3>Capability matching</h3>
+              <p>
+                Each sub-task is matched against the capability profiles the ensemble maintains, which here
+                means a specialist role: physiologist, biomechanist, strength coach, analyst. The memory
+                enters twice. It tells the controller how deep each sub-task sits in the domain hierarchy,
+                and it supplies the context the sub-task is answered against.
+              </p>
+              <p class="caption">The small disk is the memory; each sub-task's dot sits at its depth.</p>
+              <p class="fig">fig. 06 · small disk = the memory · each sub-task's dot at its depth</p>
+            </div>
+          </div>
+          <div class="step" data-step="2">
+            <div class="card">
+              <h3>Allocate compute where it buys information</h3>
+              <div class="eq-row">
+                <div class="eq" data-tex="I^{*}(q_i)=\arg\max_{I}\;\frac{G(q_i,I)}{C(I)}"></div>
+                <span class="eq-no">(6)</span>
+              </div>
+              <p>
+                G is the expected information gain of spending inference budget I on q<sub>i</sub>, C its
+                cost. The bars grow with the ratio; a sub-task whose ratio does not clear the remaining
+                budget is skipped rather than answered badly.
+              </p>
+              <table class="mini" id="alloc-table">
+                <thead><tr><th>sub-task</th><th>G</th><th>C</th><th>G / C</th></tr></thead>
+                <tbody></tbody>
+              </table>
+              <p class="caption">Gain and cost values follow the shape of the sample run; the ratios and bars are computed live.</p>
+              <p class="fig">fig. 06 · eq. (6) allocation · bars grow with G/C · amber = skipped for budget</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 07 ============ -->
+      <section class="chapter" id="ch-7" data-scene="ensemble" data-title="Ensemble and throttling" aria-labelledby="h-ch7">
+        <p class="vh">Visual: three provider lanes each with traces of latency, response length and information density over twenty-four requests; one provider's latency climbs while its length and density fall, a detector flags it in amber, and request particles are rerouted to the other two providers.</p>
+        <div class="steps">
+          <div class="step" data-step="0">
+            <div class="card">
+              <div class="chap"><span class="n">07</span><span class="rule"></span><span class="of">of 09</span></div>
+              <h2 id="h-ch7">Ensemble and throttling</h2>
+              <p>
+                The ensemble is provider-agnostic. Each provider gets a <em>capability profile</em>, every
+                response is normalised to one standard schema so the synthesiser never sees provider quirks,
+                and requests are load-balanced across providers.
+              </p>
+              <p class="caption">Lanes for provider-a, provider-b and provider-c; particles are requests; traces show latency, length and density.</p>
+              <p class="fig">fig. 07 · three provider lanes · particles are requests · traces: latency, length, density</p>
+            </div>
+          </div>
+          <div class="step" data-step="1">
+            <div class="card">
+              <h3>Throttling detection</h3>
+              <p>
+                A provider under rate limiting rarely says so. The paper's detector watches three things
+                instead: response patterns, computation time and information density. Here provider-b's
+                latency climbs while its answers get shorter and thinner; each signal is standardised
+                against the provider's own baseline and combined.
+              </p>
+              <p class="stat" id="detector-readout">latency z <b>0.0</b> · length z <b>0.0</b> · density z <b>0.0</b> · score <b>0.00</b></p>
+              <span class="flag" id="detector-flag">throttling suspected · provider-b</span>
+              <p class="caption">Amber marks the request at which the combined score crossed the threshold.</p>
+              <p class="fig">fig. 07 · request <span data-fig="ens-req">1</span> of 24 · detector threshold 1.6</p>
+            </div>
+          </div>
+          <div class="step" data-step="2">
+            <div class="card">
+              <h3>Failover</h3>
+              <p>
+                Once flagged, the provider is taken out of rotation and its pending sub-tasks are reissued
+                to the others; it is probed again later and readmitted when its signals return to baseline.
+                No sub-task stalls, and the synthesiser downstream sees the same response schema either way.
+              </p>
+              <p class="caption">After the flag, request particles flow only to provider-a and provider-c.</p>
+              <p class="fig">fig. 07 · request <span data-fig="ens-req">1</span> of 24 · after the flag, particles reach provider-a and provider-c only</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 08 ============ -->
+      <section class="chapter" id="ch-8" data-scene="synthesis" data-title="Synthesis" aria-labelledby="h-ch8">
+        <p class="vh">Visual: candidate answers plotted by cost against weighted quality; the Pareto front joins the undominated ones; constraint floors are drawn as lines; the chosen answer, the one maximising the weighted objective, moves along the front as the weight sliders change.</p>
+        <div class="steps">
+          <div class="step" data-step="0">
+            <div class="card">
+              <div class="chap"><span class="n">08</span><span class="rule"></span><span class="of">of 09</span></div>
+              <h2 id="h-ch8">Synthesis</h2>
+              <p>
+                Answers from several models and from the memory are fused into candidate responses R and
+                scored on several objectives at once:
+              </p>
+              <div class="eq-row">
+                <div class="eq" data-tex="\max_{R}\; J(R)=\sum_{i} w_i\, f_i(R)\quad\text{s.t.}\quad f_j(R)\ge\varepsilon_j"></div>
+                <span class="eq-no">(7)</span>
+              </div>
+              <p>
+                The objectives here are the ones the open-source synthesiser reports: coverage, density,
+                agreement between sources, recency and cost. Seven synthetic candidates are scored live by
+                the formula.
+              </p>
+              <p class="caption">Each dot is a candidate; x is the cost score (right is cheaper), y the weighted quality.</p>
+              <p class="fig">fig. 08 · eq. (7) · x = cost score (right is cheaper) · y = weighted quality</p>
+            </div>
+          </div>
+          <div class="step" data-step="1">
+            <div class="card">
+              <h3>Weights move the choice along the front</h3>
+              <div class="sliders">
+                <label class="slider" for="w-coverage"><span><span>w coverage</span><output id="o-coverage">0.30</output></span><input id="w-coverage" type="range" min="0" max="1" step="0.01" value="0.30" /></label>
+                <label class="slider" for="w-density"><span><span>w density</span><output id="o-density">0.20</output></span><input id="w-density" type="range" min="0" max="1" step="0.01" value="0.20" /></label>
+                <label class="slider" for="w-agreement"><span><span>w agreement</span><output id="o-agreement">0.20</output></span><input id="w-agreement" type="range" min="0" max="1" step="0.01" value="0.20" /></label>
+                <label class="slider" for="w-recency"><span><span>w recency</span><output id="o-recency">0.15</output></span><input id="w-recency" type="range" min="0" max="1" step="0.01" value="0.15" /></label>
+                <label class="slider" for="w-cost"><span><span>w cost</span><output id="o-cost">0.15</output></span><input id="w-cost" type="range" min="0" max="1" step="0.01" value="0.15" /></label>
+              </div>
+              <div class="eq eq-live" id="eq-j-live" data-tex="J(R^{*})=\htmlClass{lf-J}{0.000}\qquad R^{*}=\htmlClass{lf-wc}{R_1}"></div>
+              <p class="caption">The brass marker is R*, the feasible candidate with the largest J; it slides along the front when the weights change.</p>
+              <p class="fig">fig. 08 · brass ring = R*, sliding along the Pareto front</p>
+            </div>
+          </div>
+          <div class="step" data-step="2">
+            <div class="card">
+              <h3>Floors, uncertainty, refinement</h3>
+              <p>
+                A candidate may trade objectives against each other but never fall below a floor ε<sub>j</sub>
+                on a constrained one; here coverage ≥ 0.5 and cost score ≥ 0.2, drawn as lines. Hollow dots
+                violate a floor and can never be chosen, however the weights are set. The fused answer
+                carries an uncertainty estimate; when it is high the controller sends the weakest sub-task
+                back round the loop: iterative refinement.
+              </p>
+              <p class="caption">ε lines in amber; infeasible candidates hollow.</p>
+              <p class="fig">fig. 08 · ε lines in amber · hollow dots violate a floor</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 09 ============ -->
+      <section class="chapter" id="ch-9" data-scene="cite" data-title="Cite and build" aria-labelledby="h-ch9">
+        <p class="vh">Visual: the disk settles into a small emblem with the heptagonal tiling inside it.</p>
+        <div class="steps">
+          <div class="step" data-step="0">
+            <div class="card">
+              <div class="chap"><span class="n">09</span><span class="rule"></span><span class="of">of 09</span></div>
+              <h2 id="h-ch9">Cite and build</h2>
+              <p class="citation">
+                D. Mojila <a class="orcid" href="https://orcid.org/0009-0007-9596-7503" rel="author"><span class="vh">ORCID </span>0009-0007-9596-7503</a>,
+                "LLM Orchestration with Geometry-Aware Memory," <cite>2026 2nd International
+                Conference on Big Data &amp; Machine Learning (ICBDML)</cite>, Bhopal, India, 27–28 Feb. 2026,
+                pp. 1–7. DOI: <a href="https://doi.org/10.1109/ICBDML68582.2026.11544690">10.1109/ICBDML68582.2026.11544690</a>.
+              </p>
+              <div class="bib">
+                <div class="bib-head">
+                  <span>BibTeX</span>
+                  <button id="copy-bib" class="btn" type="button">Copy BibTeX</button>
+                </div>
+<pre id="bibtex">@inproceedings{mojila2026llmorchestration,
+  author    = {Mojila, Dhruv},
+  title     = {{LLM} Orchestration with Geometry-Aware Memory},
+  booktitle = {2026 2nd International Conference on Big Data \&amp; Machine Learning (ICBDML)},
+  year      = {2026},
+  pages     = {1--7},
+  publisher = {IEEE},
+  address   = {Bhopal, India},
+  doi       = {10.1109/ICBDML68582.2026.11544690}
+}</pre>
+              </div>
+              <ul class="links">
+                <li><a href="https://ieeexplore.ieee.org/document/11544690">IEEE Xplore · document 11544690</a></li>
+                <li><a href="https://orcid.org/0009-0007-9596-7503">ORCID · 0009-0007-9596-7503</a></li>
+                <li><a href="https://github.com/dhruvmojila/poincare-memory">GitHub · poincare-memory, the memory in Python</a></li>
+                <li><a href="https://github.com/dhruvmojila/poincare-orchestra">GitHub · poincare-orchestra, controller, ensemble and synthesis</a></li>
+              </ul>
+              <p class="fig">fig. 09 · the disk settling into its emblem, the {7,3} tiling the page opened with</p>
+            </div>
+          </div>
+          <div class="step" data-step="1">
+            <div class="card">
+              <h3>Build with it</h3>
+<pre class="code">npm install poincare-ball
+
+import { PoincareBall, sarkarLayout, regularTiling, makeDecay,
+         shellDistance, hashingEmbed, indexTree } from 'poincare-ball';
+const ball = new PoincareBall(1);
+ball.distanceArcosh([0.3, 0.1], [-0.2, 0.5]);   // eq. (3)
+sarkarLayout(tree, { tau: 1.1 });               // hierarchy → disk
+regularTiling(7, 3, 4);                         // the hero tiling
+makeDecay('half-life', 14)(ageDays);            // recency weight
+hashingEmbed('knee flexion');                   // the offline embedder
+shellDistance(query, memory, 1);                // direction only</pre>
+              <p class="small">
+                Every number on this page, distances, layouts, weights, scores, embeddings, metrics and the
+                tiling, is computed in the browser by the <code>poincare-ball</code> library, whose tests run
+                with <code>npm test</code>.
+              </p>
+              <p class="caption">The disk, settled into its emblem: the {7,3} tiling the page opened with, with the memory's depth rings inside.</p>
+              <p class="fig">fig. 09 · the emblem · depth rings 1–3 inside the tiling</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <p class="provenance">
+          This page and the companion libraries are the author's open-source reference implementation and
+          explanation of the method described in the paper. The system used for the paper's experiments is not
+          released; everything here was written afterwards from the paper's description, and any numbers shown on
+          this page come from the open-source code.
+        </p>
+        <p class="small">
+          Code: Apache-2.0. Text and figures on this page: © 2026 Dhruv Mojila. The paper itself is © IEEE.
+          <a href="#top">Back to top</a>
+        </p>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
