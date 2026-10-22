@@ -1,5 +1,7 @@
 # poincare-explainer
 
+**Live site:** https://dhruvmojila.github.io/poincare-explainer/
+
 Interactive, open-source explainer and TypeScript reference library for
 
 > D. Mojila, "LLM Orchestration with Geometry-Aware Memory," *2026 2nd International Conference on Big Data & Machine Learning (ICBDML)*, Bhopal, India, 27–28 Feb. 2026, pp. 1–7. DOI: [10.1109/ICBDML68582.2026.11544690](https://doi.org/10.1109/ICBDML68582.2026.11544690) · [IEEE Xplore](https://ieeexplore.ieee.org/document/11544690) · author ORCID [0009-0007-9596-7503](https://orcid.org/0009-0007-9596-7503)
