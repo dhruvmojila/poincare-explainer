@@ -1,0 +1,58 @@
+cff-version: 1.2.0
+message: >-
+  If you use this explainer or the poincare-ball library, please cite the ICBDML 2026
+  paper (preferred-citation) and, where appropriate, the software release itself.
+type: software
+title: "poincare-explainer"
+authors:
+  - family-names: Mojila
+    given-names: Dhruv
+    orcid: "https://orcid.org/0009-0007-9596-7503"
+version: 0.1.1
+date-released: "2026-10-21"
+license: Apache-2.0
+doi: 10.5281/zenodo.23551755
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.23551755
+    description: "Zenodo concept DOI, resolves to the latest release"
+  - type: doi
+    value: 10.5281/zenodo.23551756
+    description: "Zenodo DOI of version 0.1.0"
+repository-code: "https://github.com/dhruvmojila/poincare-explainer"
+url: "https://dhruvmojila.github.io/poincare-explainer/"
+abstract: >-
+  Interactive, open-source explainer and TypeScript reference library
+  (poincare-ball) for "LLM Orchestration with Geometry-Aware Memory"
+  (IEEE ICBDML 2026): nine scroll-driven chapters on hyperbolic memory,
+  orchestration and synthesis, with every figure computed in the browser.
+keywords:
+  - large language models
+  - LLM orchestration
+  - agent memory
+  - hyperbolic embeddings
+  - Poincaré ball
+  - interactive explainer
+preferred-citation:
+  type: conference-paper
+  title: "LLM Orchestration with Geometry-Aware Memory"
+  authors:
+    - family-names: Mojila
+      given-names: Dhruv
+      orcid: "https://orcid.org/0009-0007-9596-7503"
+  collection-title: "2026 2nd International Conference on Big Data & Machine Learning (ICBDML)"
+  collection-type: proceedings
+  conference:
+    name: "2026 2nd International Conference on Big Data & Machine Learning (ICBDML)"
+    city: Bhopal
+    country: IN
+    date-start: "2026-02-27"
+    date-end: "2026-02-28"
+  publisher:
+    name: IEEE
+  year: 2026
+  month: 2
+  start: 1
+  end: 7
+  doi: 10.1109/ICBDML68582.2026.11544690
+  url: "https://doi.org/10.1109/ICBDML68582.2026.11544690"

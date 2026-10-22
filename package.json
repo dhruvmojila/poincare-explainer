@@ -1,7 +1,7 @@
 {
   "name": "poincare-explainer",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Interactive explainer and TypeScript reference library for 'LLM Orchestration with Geometry-Aware Memory' (Mojila, ICBDML 2026, DOI 10.1109/ICBDML68582.2026.11544690).",
   "license": "Apache-2.0",
   "type": "module",

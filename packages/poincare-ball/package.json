@@ -37,9 +37,14 @@
   "author": "Dhruv Mojila",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dhruvmojila/poincare-memory"
+    "url": "git+https://github.com/dhruvmojila/poincare-explainer.git",
+    "directory": "packages/poincare-ball"
   },
   "dependencies": {
     "blakejs": "^1.2.1"
+  },
+  "homepage": "https://dhruvmojila.github.io/poincare-explainer/",
+  "bugs": {
+    "url": "https://github.com/dhruvmojila/poincare-explainer/issues"
   }
 }

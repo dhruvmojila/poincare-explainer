@@ -2,6 +2,11 @@
 
 **Live site:** https://dhruvmojila.github.io/poincare-explainer/
 
+[![CI](https://github.com/dhruvmojila/poincare-explainer/actions/workflows/ci.yml/badge.svg)](https://github.com/dhruvmojila/poincare-explainer/actions/workflows/ci.yml)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23551755.svg)](https://doi.org/10.5281/zenodo.23551755)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![Paper](https://img.shields.io/badge/IEEE%20ICBDML%202026-10.1109%2FICBDML68582.2026.11544690-00629B)](https://doi.org/10.1109/ICBDML68582.2026.11544690)
+
 Interactive, open-source explainer and TypeScript reference library for
 
 > D. Mojila, "LLM Orchestration with Geometry-Aware Memory," *2026 2nd International Conference on Big Data & Machine Learning (ICBDML)*, Bhopal, India, 27–28 Feb. 2026, pp. 1–7. DOI: [10.1109/ICBDML68582.2026.11544690](https://doi.org/10.1109/ICBDML68582.2026.11544690) · [IEEE Xplore](https://ieeexplore.ieee.org/document/11544690) · author ORCID [0009-0007-9596-7503](https://orcid.org/0009-0007-9596-7503)
@@ -148,6 +153,8 @@ Measured without compression (`npm run lighthouse -- --no-compression`) the mobi
   doi       = {10.1109/ICBDML68582.2026.11544690}
 }
 ```
+
+The explainer and the `poincare-ball` library are archived on Zenodo under the concept DOI [10.5281/zenodo.23551755](https://doi.org/10.5281/zenodo.23551755), which always resolves to the latest release; see `CITATION.cff`.
 
 ## Licence
 

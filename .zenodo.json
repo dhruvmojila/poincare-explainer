@@ -1,0 +1,30 @@
+{
+  "upload_type": "software",
+  "title": "poincare-explainer: interactive explainer of LLM Orchestration with Geometry-Aware Memory",
+  "version": "0.1.1",
+  "creators": [
+    {
+      "name": "Mojila, Dhruv",
+      "orcid": "0009-0007-9596-7503"
+    }
+  ],
+  "license": "apache-2.0",
+  "description": "Interactive, open-source explainer and TypeScript reference library (poincare-ball) for 'LLM Orchestration with Geometry-Aware Memory' (IEEE ICBDML 2026, doi:10.1109/ICBDML68582.2026.11544690): nine scroll-driven chapters on hyperbolic memory, orchestration and synthesis, with every figure computed in the browser. Written after the paper from its description; the original experimental system is not released. Live at https://dhruvmojila.github.io/poincare-explainer/",
+  "keywords": [
+    "large language models",
+    "LLM orchestration",
+    "agent memory",
+    "hyperbolic embeddings",
+    "Poincaré ball",
+    "interactive explainer",
+    "scientific visualization",
+    "TypeScript"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://doi.org/10.1109/ICBDML68582.2026.11544690",
+      "relation": "isSupplementTo",
+      "resource_type": "publication-conferencepaper"
+    }
+  ]
+}
