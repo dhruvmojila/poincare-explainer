@@ -1,0 +1,24 @@
+# Stages packages/poincare-ball on npm through trusted publishing (OIDC): no token,
+# provenance attached. The maintainer approves the staged version on npmjs.com.
+name: Publish poincare-ball
+on:
+  push:
+    tags: ["poincare-ball-v*"]
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+      - run: npm install -g npm@11
+      - run: npm ci
+      - run: npm test -w poincare-ball
+      - run: npm run build -w poincare-ball
+      - run: npm stage publish
+        working-directory: packages/poincare-ball

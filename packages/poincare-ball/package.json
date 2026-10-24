@@ -1,6 +1,6 @@
 {
   "name": "poincare-ball",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Poincaré ball model of hyperbolic space (Möbius gyrovector operations, exp/log maps, geodesics, Lorentz conversion, Sarkar tree layout, exponential decay weights). Reference implementation accompanying Mojila, 'LLM Orchestration with Geometry-Aware Memory', ICBDML 2026.",
   "license": "Apache-2.0",
   "type": "module",
