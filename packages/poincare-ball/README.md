@@ -1,10 +1,17 @@
 # poincare-ball
 
+[![npm](https://img.shields.io/npm/v/poincare-ball.svg)](https://www.npmjs.com/package/poincare-ball)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+
 Poincaré ball model of hyperbolic space in TypeScript (ESM; one runtime dependency,
 [`blakejs`](https://www.npmjs.com/package/blakejs), for the hashing embedder).
 Reference implementation accompanying
 
 > D. Mojila, "LLM Orchestration with Geometry-Aware Memory," *2026 2nd International Conference on Big Data & Machine Learning (ICBDML)*, Bhopal, India, 27–28 Feb. 2026, pp. 1–7. DOI: [10.1109/ICBDML68582.2026.11544690](https://doi.org/10.1109/ICBDML68582.2026.11544690)
+
+```sh
+npm install poincare-ball
+```
 
 ```ts
 import { PoincareBall, sarkarLayout, geodesicArc, decayWeight, hashingEmbed, shellDistance } from 'poincare-ball';

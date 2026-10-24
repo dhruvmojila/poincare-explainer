@@ -3,6 +3,7 @@
 **Live site:** https://dhruvmojila.github.io/poincare-explainer/
 
 [![CI](https://github.com/dhruvmojila/poincare-explainer/actions/workflows/ci.yml/badge.svg)](https://github.com/dhruvmojila/poincare-explainer/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/poincare-ball.svg)](https://www.npmjs.com/package/poincare-ball)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23551755.svg)](https://doi.org/10.5281/zenodo.23551755)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Paper](https://img.shields.io/badge/IEEE%20ICBDML%202026-10.1109%2FICBDML68582.2026.11544690-00629B)](https://doi.org/10.1109/ICBDML68582.2026.11544690)
